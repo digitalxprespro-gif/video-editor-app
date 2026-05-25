@@ -4,48 +4,34 @@
     <meta charset="UTF-8">
     <title>Video Editor Pro</title>
     <style>
-        body { font-family: sans-serif; text-align: center; padding: 20px; }
-        .container { max-width: 400px; margin: auto; }
-        input { width: 80%; padding: 10px; }
-        button { padding: 10px 20px; background: #007bff; color: white; border: none; cursor: pointer; }
+        body { font-family: sans-serif; display: flex; justify-content: center; padding-top: 20px; background-color: #f4f4f9; }
+        .container { background: white; padding: 20px; border-radius: 15px; width: 90%; max-width: 400px; text-align: center; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        input { width: 70%; padding: 10px; }
+        button { width: 100%; padding: 12px; margin-top: 10px; background: #007bff; color: white; border: none; border-radius: 5px; }
+        .cancel-btn { cursor: pointer; color: red; font-size: 20px; }
         #status, #timer { margin-top: 15px; font-weight: bold; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h2>🎥 ভিডিও এডিটর প্রো</h2>
-        <input type="text" id="videoUrl" placeholder="ভিডিও লিংক দিন...">
-        <button id="processBtn" onclick="sendToBackend()">এডিট শুরু করুন</button>
-        <div id="status"></div>
-        <div id="timer">সময়: ০ সেকেন্ড</div>
+<div class="container">
+    <h2>🎥 ভিডিও এডিটর প্রো</h2>
+    <div>
+        <input type="text" id="url" placeholder="লিংক দিন...">
+        <span class="cancel-btn" onclick="document.getElementById('url').value=''">×</span>
     </div>
-
-    <script>
-        async function sendToBackend() {
-            const url = document.getElementById('videoUrl').value;
-            const statusDiv = document.getElementById('status');
-            const timerDiv = document.getElementById('timer');
-            
-            if(!url) return alert("লিংক দিন!");
-            
-            // টাইমার ও ইউআই আপডেট
-            document.getElementById('processBtn').disabled = true;
-            let s = 0;
-            let timer = setInterval(() => { s++; timerDiv.innerText = "সময়: " + s + " সেকেন্ড"; }, 1000);
-            statusDiv.innerText = "সার্ভারে পাঠানো হচ্ছে...";
-
-            // ব্যাকএন্ডে রিকোয়েস্ট পাঠানো
-            const response = await fetch('/download', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({url: url})
-            });
-
-            const data = await response.json();
-            statusDiv.innerText = "✅ " + data.message;
-            clearInterval(timer);
-            document.getElementById('processBtn').disabled = false;
-        }
-    </script>
+    <button onclick="start()">ডাউনলোড ও এডিট</button>
+    <div id="status"></div>
+    <div id="timer">সময়: ২০ সেকেন্ড</div>
+</div>
+<script>
+    async function start() {
+        let s = 20;
+        let t = setInterval(() => { s--; document.getElementById('timer').innerText = "সময়: "+s+" সেকেন্ড"; if(s<=0) clearInterval(t); }, 1000);
+        document.getElementById('status').innerText = "এডিটিং চলছে...";
+        const res = await fetch('/process', { method: 'POST', body: JSON.stringify({url: document.getElementById('url').value}), headers: {'Content-Type': 'application/json'}});
+        const data = await res.json();
+        document.getElementById('status').innerText = data.message;
+    }
+</script>
 </body>
 </html>
