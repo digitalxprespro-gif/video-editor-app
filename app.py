@@ -1,4 +1,4 @@
-from flask import Flask, send_from_directory
+from flask import Flask, send_from_directory, os
 
 app = Flask(__name__, static_folder='.')
 
@@ -8,8 +8,8 @@ def index():
 
 @app.route('/download_video')
 def download_video():
-    # এখানে আপনার এডিট করা ভিডিও ফাইলটি থাকতে হবে
-    return send_from_directory('.', 'final_video.mp4')
+    # ফাইলটি বর্তমান ডিরেক্টরি থেকে সার্ভ করবে
+    return send_from_directory(os.getcwd(), 'final_video.mp4')
 
 if __name__ == '__main__':
     app.run()
