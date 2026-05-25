@@ -4,10 +4,9 @@
     <meta charset="UTF-8">
     <title>Video Editor Pro</title>
     <style>
-        body { font-family: sans-serif; background: #f4f4f9; padding: 20px; }
-        .container { max-width: 400px; margin: auto; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); text-align: center; }
+        body { font-family: sans-serif; background: #f4f4f9; padding: 20px; text-align: center; }
+        .container { max-width: 400px; margin: auto; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
         input, button { width: 100%; padding: 12px; margin-top: 10px; border-radius: 5px; border: 1px solid #ccc; }
-        .btn { background: #007bff; color: white; cursor: pointer; border: none; }
         #timer { font-size: 20px; color: red; font-weight: bold; margin-top: 10px; }
     </style>
 </head>
@@ -15,14 +14,14 @@
 <div class="container">
     <h2>🎥 ভিডিও এডিটর প্রো</h2>
     <input type="text" id="url" placeholder="ফেসবুক ভিডিও লিংক...">
-    <button class="btn" onclick="startProcessing()">ডাউনলোড ও এডিট</button>
+    <button style="background:#007bff; color:white;" onclick="start()">ডাউনলোড ও এডিট</button>
     <div id="timer"></div>
-    <a id="downloadLink" href="/download_video" style="display:none;">
+    <a id="downloadLink" href="/final_video.mp4" style="display:none;">
         <button style="background:green; color:white; margin-top:10px;">ফাইলটি ডাউনলোড করুন</button>
     </a>
 </div>
 <script>
-    function startProcessing() {
+    function start() {
         let sec = 30;
         document.getElementById('timer').innerText = "সময়: " + sec + " সেকেন্ড";
         let t = setInterval(() => {
