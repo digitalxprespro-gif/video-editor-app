@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Editor App</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; background: #f4f4f9; display: flex; justify-content: center; }
+        .card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 100%; max-width: 400px; }
+        h3 { text-align: center; color: #333; }
+        input { width: 90%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 8px; }
+        button { width: 100%; padding: 12px; background: #007bff; color: white; border: none; border-radius: 8px; cursor: pointer; margin-top: 10px; font-weight: bold; }
+        .lofi-btn { background: #6f42c1; }
+        .upload-section { margin-top: 20px; border-top: 2px dashed #ccc; padding-top: 15px; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h3>🎥 ভিডিও এডিটর প্রো</h3>
+    
+    <input type="text" id="videoUrl" placeholder="ভিডিওর লিংক পেস্ট করুন...">
+    <button onclick="processAction('download')">ডাউনলোড ও এডিট</button>
+    <button class="lofi-btn" onclick="processAction('lofi')">লফি (Lofi) মোড চালু</button>
+
+    <div class="upload-section">
+        <label>আপনার ফাইল:</label>
+        <input type="file" id="fileUpload">
+        <button style="background: #28a745;" onclick="uploadAndEdit()">আপলোড করে এডিট</button>
+    </div>
+</div>
+
+<script>
+    // সার্ভার লিংক এখানে বসাবেন (যখন আপনার ক্লাউড সার্ভার রেডি হবে)
+    const SERVER_URL = "https://your-cloud-server.com";
+
+    async function processAction(mode) {
+        const url = document.getElementById('videoUrl').value;
+        if(!url) return alert("দয়া করে একটি ভিডিও লিংক দিন!");
+        
+        alert(mode + " প্রসেসিং শুরু হচ্ছে...");
+        
+        // এখানে সার্ভারে রিকোয়েস্ট যাবে
+        console.log("Sending to server:", {url, mode});
+    }
+
+    function uploadAndEdit() {
+        const fileInput = document.getElementById('fileUpload');
+        if(fileInput.files.length === 0) return alert("ফাইল সিলেক্ট করুন!");
+        alert("ফাইল আপলোড হচ্ছে, দয়া করে অপেক্ষা করুন...");
+    }
+</script>
+
+</body>
+</html>
