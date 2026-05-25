@@ -2,38 +2,62 @@
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Video Editor Pro</title>
     <style>
-        #loader { display: none; font-weight: bold; color: blue; }
-        .cancel-btn { display: none; color: red; cursor: pointer; }
+        body { font-family: sans-serif; display: flex; justify-content: center; padding-top: 20px; background-color: #f4f4f9; }
+        .container { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); width: 90%; max-width: 400px; text-align: center; }
+        input[type="text"] { width: 100%; padding: 12px; margin: 15px 0; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; margin: 5px 0; border: none; border-radius: 5px; color: white; font-weight: bold; cursor: pointer; }
+        .btn-download { background-color: #007bff; }
+        .btn-lofi { background-color: #6f42c1; }
+        #status { font-weight: bold; color: blue; margin-top: 15px; }
+        .cancel-btn { color: red; cursor: pointer; text-decoration: underline; margin-top: 10px; display: block; }
     </style>
 </head>
 <body>
-    <h1>ভিডিও এডিটর প্রো</h1>
-    <input type="text" id="videoUrl" placeholder="ভিডিওর লিংক দিন...">
-    <button id="processBtn" onclick="startProcess()">ডাউনলোড ও এডিট</button>
-    <span id="cancelBtn" class="cancel-btn" onclick="cancelProcess()">[X] বাতিল করুন</span>
+
+<div class="container">
+    <h2>🎥 ভিডিও এডিটর প্রো</h2>
+    <input type="text" id="videoUrl" placeholder="ফেসবুক ভিডিওর লিংক দিন...">
+    <button class="btn-download" id="processBtn" onclick="startProcess()">ডাউনলোড ও এডিট</button>
+    <button class="btn-lofi">লফি (Lofi) মোড চালু</button>
     
-    <div id="loader">প্রসেসিং চলছে, দয়া করে অপেক্ষা করুন...</div>
+    <div id="status"></div>
+    <span id="cancelBtn" class="cancel-btn" style="display:none;" onclick="cancelProcess()">[X] বাতিল করুন</span>
+</div>
 
-    <script>
-        let isProcessing = false;
+<script>
+    async function startProcess() {
+        const url = document.getElementById('videoUrl').value;
+        const statusDiv = document.getElementById('status');
+        const processBtn = document.getElementById('processBtn');
+        const cancelBtn = document.getElementById('cancelBtn');
+        
+        if(!url) { alert("একটি লিংক দিন!"); return; }
 
-        function startProcess() {
-            isProcessing = true;
-            document.getElementById('loader').style.display = 'block';
-            document.getElementById('cancelBtn').style.display = 'inline';
-            document.getElementById('processBtn').disabled = true;
+        statusDiv.innerText = "প্রসেসিং শুরু হচ্ছে...";
+        processBtn.disabled = true;
+        cancelBtn.style.display = 'block';
+
+        try {
+            const response = await fetch('/download', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({url: url})
+            });
+            const data = await response.json();
+            statusDiv.innerText = data.message;
+        } catch (e) {
+            statusDiv.innerText = "সার্ভার এরর!";
         }
+        processBtn.disabled = false;
+        cancelBtn.style.display = 'none';
+    }
 
-        function cancelProcess() {
-            isProcessing = false;
-            document.getElementById('loader').style.display = 'none';
-            document.getElementById('cancelBtn').style.display = 'none';
-            document.getElementById('processBtn').disabled = false;
-            alert("প্রসেসটি বাতিল করা হয়েছে।");
-            // সার্ভারে রিকোয়েস্ট ক্যানসেল করার লজিক এখানে যোগ করতে হবে
-        }
-    </script>
+    function cancelProcess() {
+        location.reload();
+    }
+</script>
 </body>
 </html>
